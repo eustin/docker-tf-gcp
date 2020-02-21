@@ -1,6 +1,6 @@
 
 APP_NAME=$(basename $(pwd))
-VM_NAME=deep-docker1
+VM_NAME=deep-docker
 ZONE=us-west1-b
 REMOTE_IMAGE_NAME=gcr.io/iconic-algo/tf-2.1.0-gpu:latest
 CONTAINER_NAME=tf-gpu
