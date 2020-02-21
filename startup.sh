@@ -1,12 +1,15 @@
 #! /bin/bash
 
-# Docker is the easiest way to enable TensorFlow GPU support on Linux since only the NVIDIA® GPU driver is required
-# on the host machine (the NVIDIA® CUDA® Toolkit does not need to be installed).
+# host machine requires nvidia drivers. tensorflow image should contain the rest required
+wget https://developer.download.nvidia.com/compute/cuda/repos/ubuntu1804/x86_64/cuda-ubuntu1804.pin
+sudo mv cuda-ubuntu1804.pin /etc/apt/preferences.d/cuda-repository-pin-600
+sudo apt-key adv --fetch-keys https://developer.download.nvidia.com/compute/cuda/repos/ubuntu1804/x86_64/7fa2af80.pub
+sudo add-apt-repository "deb http://developer.download.nvidia.com/compute/cuda/repos/ubuntu1804/x86_64/ /"
+sudo apt-get update
 sudo apt-get install -y cuda-drivers
 
 # install docker
 sudo apt-get update
-
 sudo apt-get install -y \
     apt-transport-https \
     ca-certificates \
@@ -19,8 +22,14 @@ sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubun
 sudo apt-get update
 sudo apt-get install -y docker-ce docker-ce-cli containerd.io
 
+# no more 'sudo docker' after this
 sudo groupadd docker
 sudo usermod -aG docker $USER
 newgrp docker
 
-docker run hello-world
+# install nvidia docker support
+distribution=$(. /etc/os-release;echo $ID$VERSION_ID)
+curl -s -L https://nvidia.github.io/nvidia-docker/gpgkey | sudo apt-key add -
+curl -s -L https://nvidia.github.io/nvidia-docker/$distribution/nvidia-docker.list | sudo tee /etc/apt/sources.list.d/nvidia-docker.list
+sudo apt-get update && sudo apt-get install -y nvidia-container-toolkit
+sudo systemctl restart docker

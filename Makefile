@@ -1,6 +1,6 @@
 
 APP_NAME=$(basename $(pwd))
-VM_NAME=deep-docker3
+VM_NAME=deep-docker
 ZONE=us-west1-b
 REMOTE_IMAGE_NAME=gcr.io/iconic-algo/tf-2.1.0-gpu:latest
 
@@ -20,7 +20,7 @@ ssh-vm:
 ssh-container:
 	gcloud compute ssh $(VM_NAME) --zone=$(ZONE) --container $(CONTAINER_NAME)
 
-build-vm:
+build-vm-gpu:
 	gcloud compute instances create $(VM_NAME) \
 	--zone=$(ZONE) \
 	--accelerator="type=nvidia-tesla-k80,count=1" \
