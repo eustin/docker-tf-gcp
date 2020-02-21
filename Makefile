@@ -1,6 +1,6 @@
 
 APP_NAME=$(basename $(pwd))
-VM_NAME=deep-docker1
+VM_NAME=deep-docker3
 ZONE=us-west1-b
 REMOTE_IMAGE_NAME=gcr.io/iconic-algo/tf-2.1.0-gpu:latest
 
@@ -15,7 +15,7 @@ image-gcloud:
 	gcloud builds submit --tag $(REMOTE_IMAGE_NAME)
 
 ssh-vm:
-	gcloud compute ssh $(VM_NAME) --zone=$(ZONE) -- -L 8890:localhost:8888 -L 8891:localhost:6006
+	gcloud compute ssh docker@$(VM_NAME) --zone=$(ZONE) -- -L 8890:localhost:8888 -L 8891:localhost:6006
 
 ssh-container:
 	gcloud compute ssh $(VM_NAME) --zone=$(ZONE) --container $(CONTAINER_NAME)
@@ -49,3 +49,16 @@ build-vm-with-container:
 	--machine-type=n1-standard-4 \
 	--maintenance-policy=TERMINATE \
 	--tags="allow-tcp-6006,allow-tcp-8888"
+
+build-vm-no-gpu:
+	gcloud compute instances create $(VM_NAME) \
+	--zone=$(ZONE) \
+	--image-family "ubuntu-1804-lts" \
+	--image-project "ubuntu-os-cloud" \
+	--boot-disk-device-name="persistent-disk" \
+	--boot-disk-size=500GB \
+	--boot-disk-type=pd-standard \
+	--machine-type=n1-standard-4 \
+	--maintenance-policy=TERMINATE \
+	--tags="allow-tcp-6006,allow-tcp-8888" \
+	--metadata-from-file startup-script=./startup.sh
