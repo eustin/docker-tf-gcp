@@ -22,7 +22,7 @@ sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubun
 sudo apt-get update
 sudo apt-get install -y docker-ce docker-ce-cli containerd.io
 
-# no more 'sudo docker' after this
+# no more 'sudo docker' after this. $USER evaluates to 'docker' during startup.
 sudo groupadd docker
 sudo usermod -aG docker $USER
 newgrp docker
