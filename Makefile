@@ -29,7 +29,7 @@ build-cloud-image:
 	gcloud builds submit --tag $(REMOTE_IMAGE_NAME)
 
 ssh-vm:
-	gcloud compute ssh docker@$(VM_NAME) --zone=$(ZONE) -- -L 8888:localhost:8888 -L 6006:localhost:6006
+	gcloud compute ssh $(USER)@$(VM_NAME) --zone=$(ZONE) -- -L 8888:localhost:8888 -L 6006:localhost:6006
 
 ssh-container:
 	gcloud compute ssh $(VM_NAME) --zone=$(ZONE) --container $(CONTAINER_NAME)
