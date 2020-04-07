@@ -10,7 +10,7 @@ build-local:
 	docker build -t $(APP_NAME) .
 
 run:
-	docker run --rm --name $(CONTAINER_NAME) -it -d -p 8888:8888 -p 6006:6006 -v /home/docker/notebooks:/home/jupyter $(REMOTE_IMAGE_NAME)
+	docker run --gpus all --rm --name $(CONTAINER_NAME) -it -d -p 8888:8888 -p 6006:6006 -v /home/docker/notebooks:/home/jupyter $(REMOTE_IMAGE_NAME)
 
 exec:
 	docker exec -it tf-gpu /bin/bash
