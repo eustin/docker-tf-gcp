@@ -31,10 +31,13 @@ build-cloud-image:
 ssh-vm:
 	gcloud compute ssh $(USER)@$(VM_NAME) --zone=$(ZONE) -- -L 8888:localhost:8888 -L 6006:localhost:6006
 
-ssh-container:
-	gcloud compute ssh $(VM_NAME) --zone=$(ZONE) --container $(CONTAINER_NAME)
+start-vm:
+	gcloud compute instances start $(VM_NAME) --zone=$(ZONE)
 
-build-vm-gpu:
+stop-vm:
+	gcloud compute instances stop $(VM_NAME) --zone=$(ZONE)
+
+build-vm:
 	gcloud compute instances create $(VM_NAME) \
 	--zone=$(ZONE) \
 	--accelerator="type=nvidia-tesla-k80,count=1" \
