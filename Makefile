@@ -44,7 +44,7 @@ build-vm:
 	--image-family "ubuntu-1804-lts" \
 	--image-project "ubuntu-os-cloud" \
 	--boot-disk-device-name="persistent-disk" \
-	--boot-disk-size=500GB \
+	--boot-disk-size=200GB \
 	--boot-disk-type=pd-standard \
 	--machine-type=n1-standard-4 \
 	--maintenance-policy=TERMINATE \
