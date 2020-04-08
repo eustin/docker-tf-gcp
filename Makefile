@@ -27,10 +27,10 @@ down:
 	docker stop $(CONTAINER_NAME)
 
 build-cloud-image:
-	gcloud builds submit --tag $(REMOTE_IMAGE_NAME)
+	gcloud builds submit --tag $(REMOTE_IMAGE_NAME) --timeout=15m
 
 ssh-vm:
-	gcloud compute ssh $(USER)@$(VM_NAME) --zone=$(ZONE) -- -L 8888:localhost:8888 -L 6006:localhost:6006
+	gcloud compute ssh $(VM_USER)@$(VM_NAME) --zone=$(ZONE) -- -L 8888:localhost:8888 -L 6006:localhost:6006
 
 start-vm:
 	gcloud compute instances start $(VM_NAME) --zone=$(ZONE)
@@ -52,5 +52,6 @@ build-vm:
 	--tags="allow-tcp-6006,allow-tcp-8888" \
 	--metadata-from-file startup-script=./startup.sh
 
-setup-vm: build-vm stop-vm start-vm
+restart-vm: stop-vm start-vm
+
 
