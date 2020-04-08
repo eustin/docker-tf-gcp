@@ -4,6 +4,7 @@ VM_NAME=deep-docker
 ZONE=us-west1-b
 REMOTE_IMAGE_NAME=gcr.io/learning-deeply/tf-2.1.0-gpu
 CONTAINER_NAME=tf-gpu
+VM_USER=whale
 
 
 build-local:
@@ -51,31 +52,5 @@ build-vm:
 	--tags="allow-tcp-6006,allow-tcp-8888" \
 	--metadata-from-file startup-script=./startup.sh
 
-# this will create a VM. however, VMs created with this method are limited to Container-Optimized OS which this
-# based on Chromium OS. installing GPU drivers looks complicated.
-build-vm-with-container:
-	gcloud compute instances create-with-container $(VM_NAME) \
-	--zone=$(ZONE) \
-	--container-image $(REMOTE_IMAGE_NAME) \
-	--container-stdin \
-	--container-tty \
-	--accelerator="type=nvidia-tesla-k80,count=1" \
-	--boot-disk-device-name="persistent-disk" \
-	--boot-disk-size=500GB \
-	--boot-disk-type=pd-standard \
-	--machine-type=n1-standard-4 \
-	--maintenance-policy=TERMINATE \
-	--tags="allow-tcp-6006,allow-tcp-8888"
+setup-vm: build-vm stop-vm start-vm
 
-build-vm-no-gpu:
-	gcloud compute instances create $(VM_NAME) \
-	--zone=$(ZONE) \
-	--image-family "ubuntu-1804-lts" \
-	--image-project "ubuntu-os-cloud" \
-	--boot-disk-device-name="persistent-disk" \
-	--boot-disk-size=500GB \
-	--boot-disk-type=pd-standard \
-	--machine-type=n1-standard-4 \
-	--maintenance-policy=TERMINATE \
-	--tags="allow-tcp-6006,allow-tcp-8888" \
-	--metadata-from-file startup-script=./startup.sh

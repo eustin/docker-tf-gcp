@@ -1,5 +1,22 @@
 #! /bin/bash
 
+LOGIN_USER=whale
+
+# add user
+sudo useradd -m $LOGIN_USER
+
+# no more 'sudo docker' after this
+sudo groupadd docker
+sudo usermod -aG docker $LOGIN_USER
+newgrp docker
+
+# make sure docker-credential-gcloud is in PATH
+# https://stackoverflow.com/questions/54494386/gcloud-auth-configure-docker-on-gcp-vm-instance-with-ubuntu-not-setup-properly
+sudo ln -s /snap/google-cloud-sdk/current/bin/docker-credential-gcloud /usr/local/bin
+
+# make gcloud docker's credential helper
+sudo -u $LOGIN_USER bash -c 'gcloud auth configure-docker --quiet'
+
 # host machine requires nvidia drivers. tensorflow image should contain the rest required
 wget https://developer.download.nvidia.com/compute/cuda/repos/ubuntu1804/x86_64/cuda-ubuntu1804.pin
 sudo mv cuda-ubuntu1804.pin /etc/apt/preferences.d/cuda-repository-pin-600
@@ -19,11 +36,6 @@ curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
 sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
 sudo apt-get update && sudo apt-get install -y docker-ce docker-ce-cli containerd.io
 
-# no more 'sudo docker' after this
-sudo groupadd docker
-sudo usermod -aG docker $USER
-newgrp docker
-
 # install nvidia docker support
 distribution=$(. /etc/os-release;echo $ID$VERSION_ID)
 curl -s -L https://nvidia.github.io/nvidia-docker/gpgkey | sudo apt-key add -
@@ -31,9 +43,4 @@ curl -s -L https://nvidia.github.io/nvidia-docker/$distribution/nvidia-docker.li
 sudo apt-get update && sudo apt-get install -y nvidia-container-toolkit
 sudo systemctl restart docker
 
-# make sure docker-credential-gcloud is in PATH
-# https://stackoverflow.com/questions/54494386/gcloud-auth-configure-docker-on-gcp-vm-instance-with-ubuntu-not-setup-properly
-sudo ln -s /snap/google-cloud-sdk/current/bin/docker-credential-gcloud /usr/local/bin
 
-# make gcloud docker's credential helper
-gcloud auth configure-docker --quiet
