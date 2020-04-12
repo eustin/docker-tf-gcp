@@ -3,7 +3,7 @@ FROM tensorflow/tensorflow:2.1.0-gpu-py3
 WORKDIR /home/jupyter
 
 RUN pip3 install --upgrade pip
-RUN pip3 install jupyterlab && jupyter serverextension enable --py jupyterlab
+RUN pip3 install jupyterlab
 
 COPY requirements.txt .
 RUN pip3 install -r requirements.txt
