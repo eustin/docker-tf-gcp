@@ -54,4 +54,6 @@ build-vm:
 
 restart-vm: stop-vm start-vm
 
+delete-vm:
+	gcloud compute instances delete $(VM_NAME) --zone=$(ZONE)
 
