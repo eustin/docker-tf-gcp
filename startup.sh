@@ -4,7 +4,7 @@ LOGIN_USER=whale
 STARTUP_SUCCESS_FILE=/home/$LOGIN_USER/.ran-startup-script
 
 if test ! -f "$STARTUP_SUCCESS_FILE"; then
-    echo "$STARTUP_SUCCESS_FILE does not exist. running startup..."
+	echo "$STARTUP_SUCCESS_FILE does not exist. running startup..."
 
 	# add user
 	sudo useradd -m $LOGIN_USER
